@@ -17,11 +17,11 @@ ENV PATH=/opt/venv/bin:$PATH \
     HF_HOME=/home/sglang/.cache/huggingface
 
 # Pinned runtime (order matters: torch first, then flashinfer, then sglang).
+# sglang's pyproject lives in the python/ subdir of the repo.
 RUN pip install --no-cache-dir torch==2.13.0 triton==3.7.1 \
- && pip install --no-cache-dir flashinfer-python==0.6.17 flashinfer-cubin==0.2.7 \
+ && pip install --no-cache-dir flashinfer-python==0.6.17 flashinfer-cubin==0.6.17 \
       --find-links https://flashinfer.ai/whl/flashinfer-cubin/ \
- || pip install --no-cache-dir flashinfer-python==0.6.17
-RUN pip install --no-cache-dir "sglang @ git+https://github.com/sgl-project/sglang@5a7b26c63" \
+ && pip install --no-cache-dir "sglang @ git+https://github.com/sgl-project/sglang@5a7b26c63#subdirectory=python" \
  && pip install --no-cache-dir transformers accelerate
 
 RUN useradd -m -u 1001 sglang && mkdir -p /home/sglang/.cache \
