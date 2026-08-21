@@ -1,0 +1,32 @@
+services:
+  ornith-nvfp4-rtx5090:
+    image: ghcr.io/r0b0tlab/ornith-15-35b-nvfp4-w4a16-sm121-sglang:rtx5090
+    container_name: ornith-nvfp4-rtx5090
+    ipc: host
+    shm_size: 16g
+    environment:
+      MODEL_PATH: /models/ornith-15-35b-a3b-nvfp4-w4a16-B
+      CONTEXT_LENGTH: "32768"
+      MEM_FRACTION_STATIC: "0.92"
+      MAX_RUNNING_REQUESTS: "4"
+      MAX_MAMBA_CACHE_SIZE: "24"
+      # MTP: "0" to disable the EAGLE draft (reclaims ~3.6 GB for KV)
+      PORT: "8000"
+    volumes:
+      - ${MODEL_DIR:-./models/ornith-15-35b-a3b-nvfp4-w4a16-B}:/models/ornith-15-35b-a3b-nvfp4-w4a16-B:ro
+      # Persist HF downloads AND the JIT caches (first-boot sm_120 CUTLASS
+      # compile ~10-20 min; warm boots thereafter).
+      - sglang-cache:/home/sglang/.cache
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  sglang-cache:

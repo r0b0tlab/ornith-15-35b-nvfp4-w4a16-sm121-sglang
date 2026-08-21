@@ -99,10 +99,52 @@ If you omit `MODEL_PATH`, the entrypoint defaults to pulling
 `r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16` from Hugging Face at boot
 (`HF_HOME` is a named volume, so the download persists across restarts).
 
-The image bakes the **pre-warmed FlashInfer JIT caches** (CUTLASS FP4 GEMM
+The GB10 image bakes the **pre-warmed FlashInfer JIT caches** (CUTLASS FP4 GEMM
 sm121 modules + autotune tables + Triton cache) from the validated runs —
 first boot does zero JIT compilation. On a cold system, first-use JIT with
 the model resident can OOM (see [Known runtime notes](#known-runtime-notes)).
+
+### RTX 5090 profile (Blackwell SM 12.0, 32 GB, x86-64)
+
+A second, x86 image and tuned profile target a single RTX 5090:
+
+```bash
+hf download r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16 \
+  --local-dir ./models/ornith-15-35b-a3b-nvfp4-w4a16-B
+
+docker compose -f docker-compose.rtx5090.yml up -d
+# or bare:
+docker run --rm --gpus all --ipc host -p 8000:8000 \
+  -v $PWD/models/ornith-15-35b-a3b-nvfp4-w4a16-B:/models/ckpt:ro \
+  -e MODEL_PATH=/models/ckpt \
+  ghcr.io/r0b0tlab/ornith-15-35b-nvfp4-w4a16-sm121-sglang:rtx5090
+```
+
+Differences vs the GB10 profile ([`serve-profiles/rtx5090/serve.sh`](serve-profiles/rtx5090/serve.sh)):
+
+| Knob | GB10 (121 GB unified) | RTX 5090 (32 GB) | Why |
+|---|---|---|---|
+| `--mem-fraction-static` | 0.80 | **0.92** | dedicated 32 GB part; OS doesn't share VRAM |
+| `--max-running-requests` | default (48/105) | **4** | mamba state cache is the binding constraint at 32 GB |
+| `--max-mamba-cache-size` | default (528) | **24** | ~1.4 GB state cache → 4 × 32K contexts fit |
+| context / KV | 32768 × 105 reqs | 32768 × 4 reqs | ~2.5 GB FP8 KV at this occupancy |
+| MTP (EAGLE K=1) | on | on; `MTP=0` env to disable | draft costs ~3.6 GB; disabling reclaims it for KV |
+
+Memory budget ≈ 21.1 GB weights + 3.6 GB draft + 1.1 GB graphs + 1.4 GB
+mamba + 2.5 GB KV ≈ 29.7 GB. First boot on a cold cache JIT-compiles the
+sm_120 CUTLASS FP4 kernels (~10–20 min; runs in host RAM on a discrete-GPU
+box — safe, unlike unified-memory parts). `docker-compose.rtx5090.yml`
+mounts a persistent volume for the caches so subsequent boots are warm.
+If capture OOMs, lower `MAX_RUNNING_REQUESTS`/`CONTEXT_LENGTH` first.
+
+The `rtx5090` tag is built by CI ([workflow](.github/workflows/build-rtx5090-image.yml))
+from [container/Dockerfile.rtx5090](container/Dockerfile.rtx5090), which
+pip-installs the same pinned stack (sglang `5a7b26c63`, torch 2.13.0+cu130,
+triton 3.7.1, flashinfer-python 0.6.17 + cubins) on x86 Ubuntu 24.04.
+**Note:** validated end-to-end on GB10/SM121; the 5090 profile is sized from
+the measured memory ledger and the vendor's SM 12.0 support envelope, but was
+not run on physical 5090 hardware before publication — report issues if
+first-boot JIT behaves differently on sm_120 discrete parts.
 
 ### Serving without the container
 
@@ -203,22 +245,26 @@ It scored GSM8K 70.00% vs this recipe's 76.25% and decoded at 38.6 tok/s vs
 
 ```
 ├── README.md
-├── docker-compose.yml        # one-command launch
-├── container/                # Dockerfile, serve.sh entrypoint, build script
+├── docker-compose.yml            # GB10/SM121 one-command launch
+├── docker-compose.rtx5090.yml    # RTX 5090 (SM 12.0, 32 GB) launch
+├── container/                    # GB10 Dockerfile + serve.sh + build script
+│   └── Dockerfile.rtx5090        # x86 CI-built image (same pinned stack)
+├── serve-profiles/
+│   └── rtx5090/serve.sh          # tuned launcher for a single 32 GB card
 ├── eval/
-│   ├── run_quality_set.py    # run the 200-question suite (resumable)
-│   ├── rescore.py            # fixed-scorer summaries from raw rows
-│   ├── answer_extract.py     # GSM8K answer extraction (the fixed scorer)
-│   └── data/                 # quality-200.jsonl + raw rows for 4 runs
+│   ├── run_quality_set.py        # run the 200-question suite (resumable)
+│   ├── rescore.py                # fixed-scorer summaries from raw rows
+│   ├── answer_extract.py         # GSM8K answer extraction (the fixed scorer)
+│   └── data/                     # quality-200.jsonl + raw rows for 4 runs
 ├── quantization/
-│   ├── w4a16-nvfp4-std.yaml  # the shipped recipe (candidate B)
-│   ├── w4a16-expert-4o6.yaml # experts-only 4/6 alternative (candidate A)
-│   ├── quant-cand-custom.py  # CPU-first quantize driver
-│   └── reattach-mtp.py       # BF16 MTP re-attachment
+│   ├── w4a16-nvfp4-std.yaml      # the shipped recipe (candidate B)
+│   ├── w4a16-expert-4o6.yaml     # experts-only 4/6 alternative (candidate A)
+│   ├── quant-cand-custom.py      # CPU-first quantize driver
+│   └── reattach-mtp.py           # BF16 MTP re-attachment
 └── audits/
-    ├── audit_checkpoint.py   # scale pairing / MTP hashes / key closure
-    ├── cosine_probe.py       # NVFP4 dequant cosine vs BF16 source
-    └── results/              # audit JSON outputs
+    ├── audit_checkpoint.py       # scale pairing / MTP hashes / key closure
+    ├── cosine_probe.py           # NVFP4 dequant cosine vs BF16 source
+    └── results/                  # audit JSON outputs
 ```
 
 ## Credits and attribution

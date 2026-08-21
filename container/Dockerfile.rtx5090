@@ -1,0 +1,37 @@
+# x86-64 / RTX 5090 (SM 12.0) image for Ornith-1.5-35B-A3B-NVFP4-W4A16.
+# Pinned to the exact stack the checkpoint was validated with on GB10:
+#   sglang 0.5.6.post3.dev9218+g5a7b26c63 (git), torch 2.13.0+cu130,
+#   triton 3.7.1, flashinfer-python 0.6.17 (+ flashinfer-cubin for sm_120
+#   cubins so FP4 GEMMs JIT without a full CUDA toolkit).
+# Built by CI (no GPU needed to assemble); first boot on the GPU completes
+# any remaining JIT with the model resident-safe (discrete-GPU host RAM).
+FROM ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      python3.12 python3-venv ninja-build git ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -sf /usr/bin/python3.12 /usr/local/bin/python \
+    && python -m venv /opt/venv
+ENV PATH=/opt/venv/bin:$PATH \
+    HOME=/home/sglang \
+    HF_HOME=/home/sglang/.cache/huggingface
+
+# Pinned runtime (order matters: torch first, then flashinfer, then sglang).
+RUN pip install --no-cache-dir torch==2.13.0 triton==3.7.1 \
+ && pip install --no-cache-dir flashinfer-python==0.6.17 flashinfer-cubin==0.2.7 \
+      --find-links https://flashinfer.ai/whl/flashinfer-cubin/ \
+ || pip install --no-cache-dir flashinfer-python==0.6.17
+RUN pip install --no-cache-dir "sglang @ git+https://github.com/sgl-project/sglang@5a7b26c63" \
+ && pip install --no-cache-dir transformers accelerate
+
+RUN useradd -m -u 1001 sglang && mkdir -p /home/sglang/.cache \
+    && chown -R sglang:sglang /home/sglang /opt/venv
+USER sglang
+WORKDIR /home/sglang
+
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=10s --start-period=1200s --retries=5 \
+  CMD curl -sf http://127.0.0.1:8000/health || exit 1
+
+COPY --chmod=755 serve-profiles/rtx5090/serve.sh /usr/local/bin/serve.sh
+ENTRYPOINT ["/usr/local/bin/serve.sh"]
