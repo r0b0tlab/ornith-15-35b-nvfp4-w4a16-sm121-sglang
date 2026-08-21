@@ -141,6 +141,10 @@ The `rtx5090` tag is built by CI ([workflow](.github/workflows/build-rtx5090-ima
 from [container/Dockerfile.rtx5090](container/Dockerfile.rtx5090), which
 pip-installs the same pinned stack (sglang `5a7b26c63`, torch 2.13.0+cu130,
 triton 3.7.1, flashinfer-python 0.6.17 + cubins) on x86 Ubuntu 24.04.
+CI pushes require the package's **Manage Actions access → repository with
+write** grant (repo settings → packages); until that is granted, the tag is
+built and pushed cross-platform (arm64 builder + qemu) and CI remains a
+verification path only.
 **Note:** validated end-to-end on GB10/SM121; the 5090 profile is sized from
 the measured memory ledger and the vendor's SM 12.0 support envelope, but was
 not run on physical 5090 hardware before publication — report issues if
