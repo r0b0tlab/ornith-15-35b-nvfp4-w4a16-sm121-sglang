@@ -43,6 +43,57 @@ deltas are within sample noise (±5–11 pp at n = 80/40/20).
 - CUDA graphs: decode `full` + prefill `breakable` (SGLang per-phase
   defaults) — both verified captured at boot
 
+### Serving performance (think-on, 262,144-token context, DGX Spark GB10)
+
+MTP sweep (EAGLE steps, draft = K+1; 15 reps × ~1,950 tokens, temp 0,
+thinking enabled, 262K context):
+
+| K | decode tok/s (e2e) | mean accept len | mean accept rate |
+|---|---|---|---|
+| K=1 | **80.78** | 1.993 | 0.993 |
+| K=2 | 61.39 | 2.083 | 0.541 |
+| K=3 | 50.44 | 2.091 | 0.363 |
+
+K=1 wins: the reject-rate penalty (0.99 → 0.36) dominates the longer accept
+length. Verified: finish=stop on all reps (reply headroom, no truncation).
+
+Concurrency ladder (r0b0bench lane, K=1, 512-token outputs, 3 reps each):
+
+| concurrency | aggregate out tok/s | completed | failed |
+|---|---|---|---|
+| C1 | 82.18 | 4 | 0 |
+| C2 | 132.72 | 8 | 0 |
+| C4 | 194.39 | 16 | 0 |
+| C8 | 269.68 | 32 | 0 |
+| C16 | 368.57 | 64 | 0 |
+| C32 | 481.91 | 128 | 0 |
+| C64 | 513.02 | 256 | 0 |
+
+Max-context NIAH (r0b0bench lane, 25/50/90% of 262,144):
+
+| depth (tokens) | with MTP K=1 | base-AR (no spec) |
+|---|---|---|
+| 65,472 | PASS | — |
+| 130,944 | PASS | — |
+| 235,699 | **FAIL** (degenerate "!" output, deterministic) | **PASS** (needle retrieved) |
+
+**MTP at ≥90% depth is a confirmed limitation**: with EAGLE K=1 active,
+the drafter's position path degrades at ~235K tokens and the verify loop
+accepts a garbage "!" stream (accept rate 1.00 in the log — the draft's
+garbage is accepted); removing the speculative algorithm passes the same
+depth. Root cause is the draft position handling at extreme depth in this
+SGLang build, not the checkpoint. For 90%+ context workloads, serve base-AR
+(no `--speculative-algorithm`).
+
+Canary lane (r0b0bench protocol): all cases pass with the fixed JSON probe
+question and `--tool-call-parser qwen3_coder`; the `structured` case shows
+run-to-run nondeterminism on this model (the model sometimes responds to the
+"output ONLY this exact JSON" instruction with a prompt-injection hedge and
+then complies). Raw: `results/canary-parser-fix.json`.
+
+Raw artifacts: `results/bench-report-thinkon.json`,
+`results/niah-90pct-baseAR.json`, `results/niah-90pct-mtp-repro.json`.
+
 ### Checkpoint audit
 
 - Scale companions present for every quantized module (30,970/30,970)

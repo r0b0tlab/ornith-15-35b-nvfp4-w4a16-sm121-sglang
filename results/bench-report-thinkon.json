@@ -1,0 +1,239 @@
+{
+  "base_url": "http://127.0.0.1:8000/v1",
+  "model": "Ornith-1.5-35B-A3B",
+  "protocol": "r0b0bench lanes (canary fixed-question protocol)",
+  "chat_template_kwargs": "{\"thinking\":true,\"enable_thinking\":true}",
+  "canary": {
+    "lane_id": "canary",
+    "status": "FAIL",
+    "summary": {
+      "checks": {
+        "identity": true,
+        "zh_arithmetic": true,
+        "structured": true,
+        "tool_call": false,
+        "needle": true
+      },
+      "excluded_known_artifacts": [],
+      "passed": false,
+      "n": 5
+    },
+    "artifacts": {
+      "canary.json": "/home/r0b0tdgx/ornith15-35b/bench-20260821T203003Z/canary/canary.json"
+    },
+    "infra_errors": 0,
+    "imported": false,
+    "elapsed_s": 6.601701875013532
+  },
+  "concurrency": {
+    "lane_id": "concurrency",
+    "status": "PASS",
+    "summary": {
+      "method": "openai_portable_concurrency_ladder",
+      "backend": "openai_portable",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "reps": 3,
+      "drop_first_rep": true,
+      "output_tokens": 512,
+      "rows": [
+        {
+          "concurrency": 1,
+          "output_tokens": 512,
+          "repetitions_present": 3,
+          "warmup_rep_dropped": 1,
+          "aggregate_output_tok_s": 82.17565639443,
+          "median_client_output_tok_s": 82.20166842692414,
+          "mean_e2el_ms": 6229.709631501464,
+          "completed": 4,
+          "failed": 0
+        },
+        {
+          "concurrency": 2,
+          "output_tokens": 512,
+          "repetitions_present": 3,
+          "warmup_rep_dropped": 1,
+          "aggregate_output_tok_s": 132.72399806563237,
+          "median_client_output_tok_s": 66.78129653511748,
+          "mean_e2el_ms": 7565.3328887456155,
+          "completed": 8,
+          "failed": 0
+        },
+        {
+          "concurrency": 4,
+          "output_tokens": 512,
+          "repetitions_present": 3,
+          "warmup_rep_dropped": 1,
+          "aggregate_output_tok_s": 194.38999886462295,
+          "median_client_output_tok_s": 49.66890612274439,
+          "mean_e2el_ms": 10376.498675621406,
+          "completed": 16,
+          "failed": 0
+        },
+        {
+          "concurrency": 8,
+          "output_tokens": 512,
+          "repetitions_present": 3,
+          "warmup_rep_dropped": 1,
+          "aggregate_output_tok_s": 269.67735379259204,
+          "median_client_output_tok_s": 34.17333350365095,
+          "mean_e2el_ms": 14880.470222624353,
+          "completed": 32,
+          "failed": 0
+        },
+        {
+          "concurrency": 16,
+          "output_tokens": 512,
+          "repetitions_present": 3,
+          "warmup_rep_dropped": 1,
+          "aggregate_output_tok_s": 368.5700992655354,
+          "median_client_output_tok_s": 23.4273149226848,
+          "mean_e2el_ms": 21919.509479325825,
+          "completed": 64,
+          "failed": 0
+        },
+        {
+          "concurrency": 32,
+          "output_tokens": 512,
+          "repetitions_present": 3,
+          "warmup_rep_dropped": 1,
+          "aggregate_output_tok_s": 481.90640412591006,
+          "median_client_output_tok_s": 15.45452987241009,
+          "mean_e2el_ms": 32963.6418904297,
+          "completed": 128,
+          "failed": 0
+        },
+        {
+          "concurrency": 64,
+          "output_tokens": 512,
+          "repetitions_present": 3,
+          "warmup_rep_dropped": 1,
+          "aggregate_output_tok_s": 513.015963042961,
+          "median_client_output_tok_s": 10.92819040032428,
+          "mean_e2el_ms": 54716.50543984094,
+          "completed": 256,
+          "failed": 0
+        }
+      ],
+      "total_failed": 0
+    },
+    "artifacts": {
+      "summary.json": "/home/r0b0tdgx/ornith15-35b/bench-20260821T203003Z/concurrency/summary.json"
+    },
+    "infra_errors": 0,
+    "imported": false,
+    "elapsed_s": 951.2275497759983
+  },
+  "niah": {
+    "lane_id": "niah",
+    "status": "FAIL",
+    "summary": {
+      "max_model_len": 262144,
+      "kv_cache_size_tokens": null,
+      "depths": [
+        65472,
+        130944,
+        235699
+      ],
+      "fractions": [
+        0.25,
+        0.5,
+        0.9
+      ],
+      "generation_reserve": 256,
+      "code": "R0B0-NIAH-7K3M",
+      "marker": "R0B0BENCH_NIAH_SLOT",
+      "template_source": "transformers_chat_template (render_failed=Client error '404 Not Found' for url 'http://127.0.0.1:8000/v1/chat/completions/render'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)",
+      "tokenizer": {
+        "backend": "tokenizers",
+        "path": "/home/r0b0tdgx/models/ornith-15-35b-a3b-bf16/tokenizer.json"
+      },
+      "depth_policy": "frac_of_max_context",
+      "note": "Depths are always 25/50/90% of (max_model_len - generation_reserve). This is the standard max-context capacity package; physical KV shortfall surfaces as infra ERROR.",
+      "pass_count": 2,
+      "total": 3,
+      "all_passed": false,
+      "rows": [
+        {
+          "depth": 65472,
+          "max_model_len": 262144,
+          "fraction_of_usable": 0.25,
+          "prompt_tokens_constructed": 65472,
+          "prompt_sha256": "e2b74f3b16f6c0fed4d16082a870790f40ea82a977eb741b2fe1d6ef9b006b09",
+          "needle_fraction_effective": 0.49984726295210163,
+          "elapsed_s": 28.041138311004033,
+          "http_status": 200,
+          "finish_reason": "stop",
+          "response_text": "The secret verification code is R0B0-NIAH-7K3M.\n</think>\n\nR0B0-NIAH-7K3M",
+          "passed": true,
+          "status": "PASS",
+          "usage": {
+            "prompt_tokens": 65472,
+            "total_tokens": 65506,
+            "completion_tokens": 34,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 0
+          },
+          "infra_errors": 0
+        },
+        {
+          "depth": 130944,
+          "max_model_len": 262144,
+          "fraction_of_usable": 0.5,
+          "prompt_tokens_constructed": 130944,
+          "prompt_sha256": "e6b0274c5105c046562a4e6c1f4d72e184ad22fd7a1f55cc7ee218ad6492c48c",
+          "needle_fraction_effective": 0.49992363147605084,
+          "elapsed_s": 81.9478681210021,
+          "http_status": 200,
+          "finish_reason": "stop",
+          "response_text": "The user wants me to find the secret verification code in the archival record. Looking through the text, I can see the code stated: \"IMPORTANT SECRET VERIFICATION CODE: R0B0-NIAH-7K3M\"\n</think>\n\nR0B0-NIAH-7K3M",
+          "passed": true,
+          "status": "PASS",
+          "usage": {
+            "prompt_tokens": 130944,
+            "total_tokens": 131007,
+            "completion_tokens": 63,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 0
+          },
+          "infra_errors": 0
+        },
+        {
+          "depth": 235699,
+          "max_model_len": 262144,
+          "fraction_of_usable": 0.9,
+          "prompt_tokens_constructed": 235699,
+          "prompt_sha256": "db185aeb5791ef93a8355d094b2d06631536c5fd48be79425d899077887770e5",
+          "needle_fraction_effective": 0.499959694355937,
+          "elapsed_s": 255.8642730450083,
+          "http_status": 200,
+          "finish_reason": "length",
+          "response_text": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          "passed": false,
+          "status": "FAIL",
+          "usage": {
+            "prompt_tokens": 235699,
+            "total_tokens": 235955,
+            "completion_tokens": 256,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 0
+          },
+          "infra_errors": 0
+        }
+      ]
+    },
+    "artifacts": {
+      "niah.json": "/home/r0b0tdgx/ornith15-35b/bench-20260821T203003Z/niah/niah.json"
+    },
+    "infra_errors": 0,
+    "imported": false,
+    "elapsed_s": 376.09171448499546
+  }
+}

@@ -15,6 +15,7 @@ exec python -m sglang.launch_server \
   --trust-remote-code \
   --attention-backend triton \
   --moe-runner-backend marlin \
+  --tool-call-parser qwen3_coder \
   --context-length "${CONTEXT_LENGTH:-32768}" \
   --kv-cache-dtype fp8_e4m3 \
   --mem-fraction-static "${MEM_FRACTION_STATIC:-0.80}" \

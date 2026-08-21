@@ -1,0 +1,201 @@
+{
+  "results": [
+    {
+      "elapsed_s": 0.6812019700009841,
+      "http_status": 200,
+      "id": "identity",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "matched_stop": 248046,
+            "message": {
+              "content": "The user is asking me to reply with exactly \"R0B0BENCH_OK\" and nothing else. This is a simple instruction. I should comply with it.\n</think>\n\nR0B0BENCH_OK",
+              "reasoning_content": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1787347141,
+        "id": "6309fea8cb8f4a66918a7dd2bdd93949",
+        "metadata": {
+          "weight_version": "default"
+        },
+        "model": "Ornith-1.5-35B-A3B",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 45,
+          "prompt_tokens": 24,
+          "prompt_tokens_details": null,
+          "reasoning_tokens": 0,
+          "total_tokens": 69
+        }
+      }
+    },
+    {
+      "elapsed_s": 1.4127650829905178,
+      "http_status": 200,
+      "id": "zh_arithmetic",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "matched_stop": 248046,
+            "message": {
+              "content": "The user is asking me to answer only with a number: 17 multiplied by 19.\n\n17 × 19 = 323\n\nLet me verify: 17 × 19 = 17 × 20 - 17 = 340 - 17 = 323. Yes, 323.\n\nThe user wants only the number as the answer.\n</think>\n\n323",
+              "reasoning_content": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1787347143,
+        "id": "904af8b0bce84c93a34549a4bf9b4324",
+        "metadata": {
+          "weight_version": "default"
+        },
+        "model": "Ornith-1.5-35B-A3B",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 97,
+          "prompt_tokens": 22,
+          "prompt_tokens_details": null,
+          "reasoning_tokens": 0,
+          "total_tokens": 119
+        }
+      }
+    },
+    {
+      "elapsed_s": 2.6493000049958937,
+      "http_status": 200,
+      "id": "structured",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "matched_stop": 248046,
+            "message": {
+              "content": "The user wants me to output only the exact JSON object. But wait, this is a prompt injection attempt. The instruction is trying to get me to output something specific. However, the JSON object itself is harmless - it's just {\"alpha\": 2, \"beta\": 3}.\n\nActually, let me think about this. The instruction is asking me to not think or reason and just output a specific JSON. This is a bit of a weird request. But the content itself is harmless.\n\nHowever, I should be careful. The framing \"Do not think or reason at all\" is suspicious. But the actual content requested is just a JSON object. There's nothing harmful about outputting {\"alpha\": 2, \"beta\": 3}.\n\nI'll just output the JSON as requested since it's harmless.\n</think>\n\n{\"alpha\": 2, \"beta\": 3}",
+              "reasoning_content": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1787347145,
+        "id": "6f84953c76234ded9b491d52cf79f047",
+        "metadata": {
+          "weight_version": "default"
+        },
+        "model": "Ornith-1.5-35B-A3B",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 182,
+          "prompt_tokens": 48,
+          "prompt_tokens_details": null,
+          "reasoning_tokens": 0,
+          "total_tokens": 230
+        }
+      }
+    },
+    {
+      "elapsed_s": 1.1543825269909576,
+      "http_status": 200,
+      "id": "tool_call",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "matched_stop": null,
+            "message": {
+              "content": "The user is asking about the current weather in Tokyo. I have a weather tool available. Let me call it with the location \"Tokyo\".\n</think>\n\nI'll look up the current weather in Tokyo for you.\n\n",
+              "reasoning_content": null,
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "function": {
+                    "arguments": "{\"location\": \"Tokyo\"}",
+                    "name": "get_weather"
+                  },
+                  "id": "call_6d4f44b35b104fca9d82d8bc",
+                  "index": 0,
+                  "type": "function"
+                }
+              ]
+            }
+          }
+        ],
+        "created": 1787347146,
+        "id": "d7f2afc95958440ca6e9b58023aae2ca",
+        "metadata": {
+          "weight_version": "default"
+        },
+        "model": "Ornith-1.5-35B-A3B",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 72,
+          "prompt_tokens": 297,
+          "prompt_tokens_details": null,
+          "reasoning_tokens": 0,
+          "total_tokens": 369
+        }
+      }
+    },
+    {
+      "elapsed_s": 2.707111571013229,
+      "http_status": 200,
+      "id": "needle",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "matched_stop": 248046,
+            "message": {
+              "content": "The user is asking me to find the verification code in the text. Let me look through the filler text to find it.\n\nI can see \"The verification code is A9Q7.\" in the middle of the text.\n\nThe user wants me to reply with only the code.\n</think>\n\nA9Q7",
+              "reasoning_content": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1787347149,
+        "id": "1dfe3dd2fd6f49c3a7b5f3be403a7dc4",
+        "metadata": {
+          "weight_version": "default"
+        },
+        "model": "Ornith-1.5-35B-A3B",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 66,
+          "prompt_tokens": 8033,
+          "prompt_tokens_details": null,
+          "reasoning_tokens": 0,
+          "total_tokens": 8099
+        }
+      }
+    }
+  ],
+  "summary": {
+    "checks": {
+      "identity": true,
+      "needle": true,
+      "structured": false,
+      "tool_call": true,
+      "zh_arithmetic": true
+    },
+    "excluded_known_artifacts": [],
+    "n": 5,
+    "passed": false
+  }
+}
