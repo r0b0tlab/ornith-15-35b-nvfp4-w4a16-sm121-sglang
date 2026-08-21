@@ -1,0 +1,94 @@
+{
+  "A": {
+    "expert_up": {
+      "key": "model.language_model.layers.0.mlp.experts.0.up_proj",
+      "src": "model.language_model.layers.0.mlp.experts.gate_up_proj",
+      "cos": {
+        "lo_s2": 0.99616,
+        "lo_nos2": 0.99632,
+        "hi_first": -0.00194
+      },
+      "status": "OK",
+      "best": 0.99632
+    },
+    "expert_down": {
+      "key": "model.language_model.layers.0.mlp.experts.0.down_proj",
+      "src": "model.language_model.layers.0.mlp.experts.down_proj",
+      "cos": {
+        "lo_s2": 0.9973,
+        "lo_nos2": 0.99734,
+        "hi_first": -0.00319
+      },
+      "status": "OK",
+      "best": 0.99734
+    }
+  },
+  "B": {
+    "expert_up": {
+      "key": "model.language_model.layers.0.mlp.experts.0.up_proj",
+      "src": "model.language_model.layers.0.mlp.experts.gate_up_proj",
+      "cos": {
+        "lo_s2": 0.99536,
+        "lo_nos2": 0.9956,
+        "hi_first": -0.00215
+      },
+      "status": "OK",
+      "best": 0.9956
+    },
+    "expert_down": {
+      "key": "model.language_model.layers.0.mlp.experts.0.down_proj",
+      "src": "model.language_model.layers.0.mlp.experts.down_proj",
+      "cos": {
+        "lo_s2": 0.9963,
+        "lo_nos2": 0.99643,
+        "hi_first": -0.00311
+      },
+      "status": "OK",
+      "best": 0.99643
+    },
+    "dense_q": {
+      "key": "model.language_model.layers.11.self_attn.q_proj",
+      "src": "model.language_model.layers.11.self_attn.q_proj.weight",
+      "cos": {
+        "lo_s2": 0.96899,
+        "lo_nos2": 0.96109,
+        "hi_first": -0.0032
+      },
+      "status": "BELOW-BAND",
+      "best": 0.96899
+    },
+    "dense_o": {
+      "key": "model.language_model.layers.11.self_attn.o_proj",
+      "src": "model.language_model.layers.11.self_attn.o_proj.weight",
+      "cos": {
+        "lo_s2": 0.98348,
+        "lo_nos2": 0.98342,
+        "hi_first": -0.00035
+      },
+      "status": "BELOW-BAND",
+      "best": 0.98348
+    },
+    "gdn_in_qkv": {
+      "key": "model.language_model.layers.0.linear_attn.in_proj_qkv",
+      "src": "model.language_model.layers.0.linear_attn.in_proj_qkv.weight",
+      "cos": {
+        "lo_s2": 0.96761,
+        "lo_nos2": 0.96225,
+        "hi_first": -0.00964
+      },
+      "status": "BELOW-BAND",
+      "best": 0.96761
+    },
+    "gdn_out": {
+      "key": "model.language_model.layers.0.linear_attn.out_proj",
+      "src": "model.language_model.layers.0.linear_attn.out_proj.weight",
+      "cos": {
+        "lo_s2": 0.98609,
+        "lo_nos2": 0.98259,
+        "hi_first": 0.00013
+      },
+      "status": "BELOW-BAND",
+      "best": 0.98609
+    }
+  }
+}

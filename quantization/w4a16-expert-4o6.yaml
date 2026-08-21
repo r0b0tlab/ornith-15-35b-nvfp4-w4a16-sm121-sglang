@@ -1,0 +1,33 @@
+# Candidate A: NVFP4 W4A16 with Four-Over-Six weight scales on MoE routed experts ONLY.
+# Everything else BF16 (attention, shared experts, embeddings, lm_head, router,
+# linear_attn/GDN, vision, MTP). FP8 KV cache embedded via kv_fp8_cast unit (NVFP4 KV blocked on aarch64 - see log).
+# Composed from ModelOpt dev main @ 913f5e224 recipe library.
+
+imports:
+  base_disable_all: configs/ptq/units/base_disable_all
+  default_disabled_quantizers: configs/ptq/units/default_disabled_quantizers
+  nvfp4_four_over_six: configs/numerics/nvfp4_four_over_six
+  kv_fp8_cast: configs/ptq/units/kv_fp8_cast
+
+metadata:
+  recipe_type: ptq
+  description: >-
+    W4A16 NVFP4 four-over-six on MoE routed expert weights; full BF16 activations;
+    NVFP4 KV cache (constant amax). Candidate A for Ornith-1.5-35B-A3B.
+
+# 4/6 per-block M=6 vs M=4 selected by MSE (amax multipliers [1.0, 1.5]) on the
+# static weight quantizers. No input quantizers anywhere (W4A16).
+quantize:
+  algorithm:
+    method: mse
+    fp8_scale_sweep: false
+    start_multiplier: 1.0
+    stop_multiplier: 1.5
+    step_size: 0.5
+  quant_cfg:
+    - $import: base_disable_all
+    - quantizer_name: '*.experts.*weight_quantizer'
+      cfg:
+        $import: nvfp4_four_over_six
+    - $import: default_disabled_quantizers
+    - $import: kv_fp8_cast

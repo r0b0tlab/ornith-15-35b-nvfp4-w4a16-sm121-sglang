@@ -1,0 +1,31 @@
+{
+  "run_id": "post-nvfp4-B",
+  "scorer": "answer_extract (last-bolded-number, normalized)",
+  "families": {
+    "gsm8k": {
+      "n": 80,
+      "graded": 80,
+      "passed": 61
+    },
+    "humaneval": {
+      "n": 40,
+      "graded": 40,
+      "passed": 37
+    },
+    "ifeval": {
+      "n": 40,
+      "graded": 40,
+      "passed": 36
+    },
+    "hard_reasoning": {
+      "n": 20,
+      "graded": 0,
+      "passed": 0
+    },
+    "agentic_coding": {
+      "n": 20,
+      "graded": 20,
+      "passed": 15
+    }
+  }
+}

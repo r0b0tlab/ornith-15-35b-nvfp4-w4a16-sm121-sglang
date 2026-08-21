@@ -1,0 +1,29 @@
+services:
+  ornith-nvfp4:
+    image: ghcr.io/r0b0tlab/ornith-15-35b-nvfp4-w4a16-sm121-sglang:latest
+    container_name: ornith-nvfp4
+    ipc: host
+    shm_size: 32g
+    environment:
+      # Local checkpoint dir mounted below takes precedence over pulling from HF.
+      MODEL_PATH: /models/ornith-15-35b-a3b-nvfp4-w4a16-B
+      CONTEXT_LENGTH: "32768"
+      MEM_FRACTION_STATIC: "0.80"
+      PORT: "8000"
+    volumes:
+      - ${MODEL_DIR:-./models/ornith-15-35b-a3b-nvfp4-w4a16-B}:/models/ornith-15-35b-a3b-nvfp4-w4a16-B:ro
+      # Persist downloads + runtime caches outside the container layer.
+      - hf-cache:/home/sglang/.cache/huggingface
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  hf-cache:

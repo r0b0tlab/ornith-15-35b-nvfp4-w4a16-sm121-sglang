@@ -1,0 +1,134 @@
+{
+  "generated": "2026-08-21T10:55:03Z",
+  "A": {
+    "scales": {
+      "total_keys": 93891,
+      "quant_weight_tensors": 0,
+      "missing_scale": [],
+      "bad_scale": [],
+      "layout_sample": [
+        [
+          "lm_head",
+          {
+            "w": "lm_head.weight"
+          }
+        ],
+        [
+          "model.language_model.embed_tokens",
+          {
+            "w": "model.language_model.embed_tokens.weight"
+          }
+        ]
+      ],
+      "paired_weight_scale": {
+        "quantized_modules": 30720,
+        "with_scale": 30720
+      }
+    },
+    "cosine": {
+      "expert_up": {
+        "key": "model.language_model.layers.0.mlp.experts.0.up_proj",
+        "status": "MISSING"
+      },
+      "expert_down": {
+        "key": "model.language_model.layers.0.mlp.experts.0.down_proj",
+        "status": "MISSING"
+      }
+    },
+    "mtp_hash": {
+      "mtp_tensors": 785,
+      "sampled": 20,
+      "mismatches": []
+    }
+  },
+  "B": {
+    "scales": {
+      "total_keys": 94391,
+      "quant_weight_tensors": 0,
+      "missing_scale": [],
+      "bad_scale": [],
+      "layout_sample": [
+        [
+          "lm_head",
+          {
+            "w": "lm_head.weight"
+          }
+        ],
+        [
+          "model.language_model.embed_tokens",
+          {
+            "w": "model.language_model.embed_tokens.weight"
+          }
+        ]
+      ],
+      "paired_weight_scale": {
+        "quantized_modules": 30970,
+        "with_scale": 30970
+      }
+    },
+    "cosine": {
+      "expert_up": {
+        "key": "model.language_model.layers.0.mlp.experts.0.up_proj",
+        "status": "MISSING"
+      },
+      "expert_down": {
+        "key": "model.language_model.layers.0.mlp.experts.0.down_proj",
+        "status": "MISSING"
+      },
+      "dense_q": {
+        "key": "model.language_model.layers.11.self_attn.q_proj",
+        "status": "MISSING"
+      },
+      "dense_o": {
+        "key": "model.language_model.layers.11.self_attn.o_proj",
+        "status": "MISSING"
+      },
+      "gdn_in_qkv": {
+        "key": "model.language_model.layers.0.linear_attn.in_proj_qkv",
+        "status": "MISSING"
+      },
+      "gdn_out": {
+        "key": "model.language_model.layers.0.linear_attn.out_proj",
+        "status": "MISSING"
+      }
+    },
+    "mtp_hash": {
+      "mtp_tensors": 785,
+      "sampled": 20,
+      "mismatches": []
+    }
+  },
+  "keydelta": {
+    "A_keys": 93891,
+    "B_keys": 94391,
+    "src_keys": 1811,
+    "only_in_B": 500,
+    "only_in_B_kinds": {
+      "scale": 500
+    },
+    "only_in_A": 0,
+    "src_keys_not_in_either": [
+      "model.language_model.layers.0.mlp.experts.gate_up_proj",
+      "model.language_model.layers.0.mlp.experts.down_proj",
+      "model.language_model.layers.1.mlp.experts.gate_up_proj",
+      "model.language_model.layers.1.mlp.experts.down_proj",
+      "model.language_model.layers.2.mlp.experts.gate_up_proj",
+      "model.language_model.layers.2.mlp.experts.down_proj",
+      "model.language_model.layers.3.mlp.experts.gate_up_proj",
+      "model.language_model.layers.3.mlp.experts.down_proj",
+      "model.language_model.layers.4.mlp.experts.gate_up_proj",
+      "model.language_model.layers.4.mlp.experts.down_proj",
+      "model.language_model.layers.5.mlp.experts.gate_up_proj",
+      "model.language_model.layers.5.mlp.experts.down_proj",
+      "model.language_model.layers.6.mlp.experts.gate_up_proj",
+      "model.language_model.layers.6.mlp.experts.down_proj",
+      "model.language_model.layers.7.mlp.experts.gate_up_proj",
+      "model.language_model.layers.7.mlp.experts.down_proj",
+      "model.language_model.layers.8.mlp.experts.gate_up_proj",
+      "model.language_model.layers.8.mlp.experts.down_proj",
+      "model.language_model.layers.9.mlp.experts.gate_up_proj",
+      "model.language_model.layers.9.mlp.experts.down_proj"
+    ],
+    "not_in_either_count": 80
+  }
+}
