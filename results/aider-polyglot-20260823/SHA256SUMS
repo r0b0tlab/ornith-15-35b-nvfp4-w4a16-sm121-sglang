@@ -1,0 +1,10 @@
+318ac1f593beeaf3616d6b3011243cb51f5904bcbb023a05dba1e53ae74399d9  ./full-artifacts.tar.gz
+6399aac50486228d4513b8afe1694a26498212a4be3aaf6c839db47adbcdb46b  ./logs/full.log
+0b14469f759e72aa8f623f5e1f626a050cc6cab69f3644f1768a2a37ef2c8644  ./logs/full-stats.log
+e12ea618be4869bb010b94c91a65d9f44870dba15adb7f07fe398e3982c2b42f  ./logs/model-name.txt
+b485be0d09ce3110670f015e3c021a3836720e91e6a2d2002286669ab452a281  ./protocol/model-settings.yml
+ecccc2265c1738def7a78051f5ee77a98cdd1d54ace881b7d1dc66f4a295607d  ./README.md
+73aa0166b554951b6804166b71834e8bd06a4ce84f6e7c7188d7609542479ecc  ./scripts/run-full.sh
+56724bae452c5fbcefc9024cb4c07bc2438e40dee45e352cf1d47a0efe46e8dc  ./telemetry/full-gpu.csv
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./telemetry/full.stop
+8dac5483355d60200c9c04af050153d9c8ed3a7d749e8273a2b5ce0155a8116e  ./telemetry/live-metrics-status.tsv

@@ -1,0 +1,16 @@
+- name: openai/main
+  edit_format: whole
+  weak_model_name: null
+  use_repo_map: true
+  use_temperature: 0.7
+  streaming: false
+  extra_params:
+    stream: false
+    max_tokens: 16384
+    top_p: 0.8
+    temperature: 0.7
+    extra_body:
+      top_k: 20
+      min_p: 0.0
+      chat_template_kwargs:
+        enable_thinking: false
