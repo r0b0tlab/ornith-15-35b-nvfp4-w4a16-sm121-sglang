@@ -1,10 +1,12 @@
 # Protocol audit — SM12X-LLM-BENCH `full` on Ornith-1.5-35B-A3B NVFP4-W4A16
 
-Verdict: **no protocol defects that invalidate the run.**
-`run_status=complete`, `invalid_for_publish=false`, `partial=false`, `--only` unset,
-`infra_errors_total=0`. All 15 profile lanes `PASS`.
+**This row forced thinking off on every lane.** That is a protocol error for a
+native-quality claim. Keep the numbers as a **think-off diagnostic** only.
+Do not treat them as the model's native (template-default thinking-on) suite.
 
-Independent recount of stored quality rows matches the lane summaries exactly.
+Harness execution of that think-off profile was otherwise clean:
+`run_status=complete`, `partial=false`, `--only` unset, `infra_errors_total=0`.
+All 15 profile lanes `PASS`. Independent quality recount matches the summaries.
 
 ## What was measured
 

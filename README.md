@@ -107,10 +107,14 @@ Raw per-question rows for all four runs: [`eval/data/`](eval/data/).
 Scoring methodology and the scorer bug we found and fixed: see
 [Methodology notes](#methodology-notes).
 
-### SM12X-LLM-BENCH `full` (2026-08-23, think-off, ctx 32768, MTP EAGLE K=1)
+### SM12X-LLM-BENCH `full` think-off (2026-08-23) — diagnostic only
 
-Standalone SM12X client, profile `full`, 15/15 lanes PASS, infra 0.
-Protocol audit: [`results/sm12x-full-20260823/PROTOCOL.md`](results/sm12x-full-20260823/PROTOCOL.md).
+**Protocol error:** thinking was forced off for the entire run. These numbers
+are the think-off profile, **not** native thinking-on quality/BFCL.
+Do not use them as the claim row.
+
+15/15 lanes completed, infra 0. Audit:
+[`results/sm12x-full-20260823/PROTOCOL.md`](results/sm12x-full-20260823/PROTOCOL.md).
 
 | Lane | n | result |
 |---|---:|---|
