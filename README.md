@@ -191,7 +191,10 @@ If capture OOMs, lower `MAX_RUNNING_REQUESTS`/`CONTEXT_LENGTH` first.
 The `rtx5090` tag is built by CI ([workflow](.github/workflows/build-rtx5090-image.yml))
 from [container/Dockerfile.rtx5090](container/Dockerfile.rtx5090), which
 pip-installs the same pinned stack (sglang `5a7b26c63`, torch 2.13.0+cu130,
-triton 3.7.1, flashinfer-python 0.6.17 + cubins) on x86 Ubuntu 24.04.
+triton 3.7.1, flashinfer-python 0.6.17 + cubins) on the CUDA 13.0 x86 Ubuntu
+24.04 development image. The development toolchain is required even with the
+FlashInfer cubins: SGLang JIT-compiles the Marlin GPTQ/NVFP4 repack kernel at
+first model load and needs `CUDA_HOME`, `nvcc`, and a host C++ compiler.
 CI pushes require the package's **Manage Actions access → repository with
 write** grant (repo settings → packages); until that is granted, the tag is
 built and pushed cross-platform (arm64 builder + qemu) and CI remains a

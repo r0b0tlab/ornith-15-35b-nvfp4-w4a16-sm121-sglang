@@ -2,13 +2,14 @@
 # Pinned to the exact stack the checkpoint was validated with on GB10:
 #   sglang 0.5.6.post3.dev9218+g5a7b26c63 (git), torch 2.13.0+cu130,
 #   triton 3.7.1, flashinfer-python 0.6.17 (+ flashinfer-cubin for sm_120
-#   cubins so FP4 GEMMs JIT without a full CUDA toolkit).
+#   cubins). SGLang's Marlin NVFP4 repack kernel is still compiled at model
+#   load, so the image must include nvcc and a host C++ compiler.
 # Built by CI (no GPU needed to assemble); first boot on the GPU completes
 # any remaining JIT with the model resident-safe (discrete-GPU host RAM).
-FROM ubuntu:24.04
+FROM nvidia/cuda:13.0.2-devel-ubuntu24.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      python3.12 python3-venv ninja-build git ca-certificates curl \
+      python3.12 python3-venv build-essential ninja-build git ca-certificates curl \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /usr/bin/python3.12 /usr/local/bin/python \
     && python -m venv /opt/venv
@@ -25,6 +26,13 @@ RUN pip install --no-cache-dir torch==2.13.0 triton==3.7.1 \
       --find-links https://flashinfer.ai/whl/flashinfer-cubin/ \
  && pip install --no-cache-dir "sglang @ git+https://github.com/sgl-project/sglang@5a7b26c63#subdirectory=python" \
  && pip install --no-cache-dir transformers accelerate
+
+# Marlin's GPTQ/NVFP4 repack path uses SGLang's runtime JIT loader. Keep this
+# assertion so a smaller base image cannot silently regress model startup.
+ENV CUDA_HOME=/usr/local/cuda
+RUN test -x "${CUDA_HOME}/bin/nvcc" \
+ && "${CUDA_HOME}/bin/nvcc" --version \
+ && c++ --version
 
 RUN useradd -m -u 1001 sglang && mkdir -p /home/sglang/.cache \
     && chown -R sglang:sglang /home/sglang /opt/venv
