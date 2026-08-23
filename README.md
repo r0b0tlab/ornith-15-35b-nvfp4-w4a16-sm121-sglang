@@ -107,6 +107,27 @@ Raw per-question rows for all four runs: [`eval/data/`](eval/data/).
 Scoring methodology and the scorer bug we found and fixed: see
 [Methodology notes](#methodology-notes).
 
+### SM12X-LLM-BENCH `full` (2026-08-23, think-off, ctx 32768, MTP EAGLE K=1)
+
+Standalone SM12X client, profile `full`, 15/15 lanes PASS, infra 0.
+Protocol audit: [`results/sm12x-full-20260823/PROTOCOL.md`](results/sm12x-full-20260823/PROTOCOL.md).
+
+| Lane | n | result |
+|---|---:|---|
+| GSM8K (full test, last-bolded) | 1319 | **88.70%** (1170) · Wilson 86.9–90.3 |
+| MMLU-Pro | 1000 | **75.50%** (755) |
+| GPQA Diamond | 198 | **62.63%** (124) |
+| ARC-Easy | 400 | **94.00%** (376) |
+| IFEval (lightweight scorer) | 200 | **95.00%** (190) |
+| HumanEval pass@1 | 164 | **89.02%** (146) |
+| BFCL V4 MT official | 200 | **48.0%** (96) |
+| BFCL V4 AST official micro | 600 | **33.8%** (203) — 67 / 102 / 34 by category |
+| NIAH 25/50/90 of 32k | 3 | **3/3 PASS** |
+| latency / decode / MTP | — | 66.1 tok/s C1 · 62.6 tok/s 2048-out · accept 1.975 |
+
+This NIAH is the 32768-window think-off ladder, not the 262144 think-on row above.
+IFEval here is a lightweight constraint checker, not the official scorer.
+
 ---
 
 ## Quick start (container)
