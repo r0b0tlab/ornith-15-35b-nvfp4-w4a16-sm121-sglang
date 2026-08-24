@@ -6,7 +6,7 @@
   streaming: false
   extra_params:
     stream: false
-    max_tokens: 16384
+    max_tokens: 65536
     top_p: 0.8
     temperature: 0.7
     extra_body:

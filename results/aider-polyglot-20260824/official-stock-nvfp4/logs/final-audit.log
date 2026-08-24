@@ -1,0 +1,55 @@
+{
+  "status": "valid-complete",
+  "result_files": 225,
+  "parse_errors": [],
+  "model_values": {
+    "openai/main": 225
+  },
+  "nonempty_chat_histories": 225,
+  "nonempty_completion_evidence": 225,
+  "client_or_api_errors": 0,
+  "context_exhaustions": 0,
+  "error_outputs": 1,
+  "malformed_responses": 1,
+  "pass_at_1": 34,
+  "pass_by_2": 80,
+  "prompt_tokens": 3152569,
+  "completion_tokens": 600623,
+  "max_chat_history_8192_confirmed": true,
+  "peak_running_requests": 12.0,
+  "mean_generation_tps": 546.47,
+  "peak_generation_tps": 5393.4,
+  "peak_vram_mib": 31204.0,
+  "by_language": {
+    "cpp": {
+      "tasks": 26,
+      "pass_at_1": 4,
+      "pass_by_2": 12
+    },
+    "go": {
+      "tasks": 39,
+      "pass_at_1": 3,
+      "pass_by_2": 10
+    },
+    "java": {
+      "tasks": 47,
+      "pass_at_1": 5,
+      "pass_by_2": 12
+    },
+    "javascript": {
+      "tasks": 49,
+      "pass_at_1": 8,
+      "pass_by_2": 19
+    },
+    "python": {
+      "tasks": 34,
+      "pass_at_1": 8,
+      "pass_by_2": 16
+    },
+    "rust": {
+      "tasks": 30,
+      "pass_at_1": 6,
+      "pass_by_2": 11
+    }
+  }
+}

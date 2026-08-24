@@ -1,0 +1,111 @@
+{
+  "created_utc": "2026-08-24T07:55:36Z",
+  "protocol_classification": "local-custom",
+  "classification_reason": "The Aider Polyglot dataset and whole-file edit contract are pinned, while the local OpenAI-compatible SGLang runtime, non-thinking Ornith sampler, 262144-token context, 65536-token output allowance, and 12-worker execution policy are locally selected.",
+  "intent": "Full 225-task Aider Polyglot coding-quality run for Ornith 1.5 35B-A3B r0b0t on Dunamis.",
+  "model": {
+    "display_name": "Ornith 1.5 35B-A3B r0b0t",
+    "repository": "r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16",
+    "revision": "dcbc0a25d5b3ce634c2f5d988a81ba598ca7adcc",
+    "profile_name": "ornith15-35b-a3b-nvfp4-aider",
+    "profile_path": "/srv/ssd/intel/llm/profiles/zzzzzzzzzzzzzzzzzzzzzzzzzzzzz-ornith15-35b-a3b-nvfp4-aider.env",
+    "profile_sha256": "43060bfbf7d69846bb5636519e0ba6f7d09e11d8e396ce4a45ecfadb55ba0418",
+    "config_sha256": "9eeb92ac059e428cb505ed39e3713d0d83485305d5342245cd42ee1cf632cb3a",
+    "model_index_sha256": "ca61f8e58ed4e41e20ad42a494a9b2cc8dc1ea5fd2fa1f968e143bbae45e62be",
+    "tokenizer_config_sha256": "5186f0defcd7f232382c7f0aebcd2252d073bb921ab240e407b7ae8745d2b29b",
+    "embedded_chat_template_sha256": "e84f32a23fdda27689f868aa4a1a5621f41133e51a48d7f3efcbea2839574259",
+    "weight_shards": [
+      {"file": "model-00001-of-00003.safetensors", "sha256": "78d3b8b10f02845bc0bb44b5d121687027e2f374dd5df87569e7845a2cbc1193"},
+      {"file": "model-00002-of-00003.safetensors", "sha256": "b4af434afedb26e5d8ea78b9c692c1b18b5e321a51ece257a39129deb1ab6722"},
+      {"file": "model-00003-of-00003.safetensors", "sha256": "c222cbf96c0b74003568914c5171b475a58d7d9d312b9866aee36f073525cf8f"}
+    ]
+  },
+  "runtime": {
+    "name": "SGLang",
+    "image_digest": "sha256:febfb971c7352570fc445c466ebd6ffc9d896024958e544a60f2137fd85856b1",
+    "context_tokens": 262144,
+    "shared_fp8_kv_pool_tokens": 313406,
+    "max_running_requests": 12,
+    "max_mamba_cache_slots": 60,
+    "kv_cache": "fp8_e4m3",
+    "mamba_ssm_dtype": "bfloat16",
+    "moe_runner": "marlin",
+    "attention_backend": "triton",
+    "radix_cache": false,
+    "prefill_cuda_graphs": false,
+    "decode_cuda_graph_batches": [1, 2, 4, 8, 12],
+    "speculation": false,
+    "metrics_enabled": true
+  },
+  "benchmark": {
+    "family": "aider-polyglot",
+    "aider_repository": "Aider-AI/aider",
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "polyglot_repository": "Aider-AI/polyglot-benchmark",
+    "polyglot_revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "container_digest": "sha256:9ddd45d4dd6c1547eb1e2d379f9b0fcec1dc4c2e65e1e82016f2f4754f231392",
+    "task_count": 225,
+    "task_tree_sha256": "292f95bbbd73408ab64a61f47602910099d8246aafa911ebc564b50876da8d58",
+    "languages": ["cpp", "go", "java", "javascript", "python", "rust"],
+    "edit_format": "whole",
+    "tries": 2,
+    "client_workers": 12,
+    "python_hash_seed": 0,
+    "run_script_sha256": "899cf48c3d99f149376862a69867850a85d8e98e4dafb7cfa8cc6f900f0ba85b",
+    "audit_script_sha256": "523802282f6492dca3ee64ed71f789407b1c8d9acda874d2500c58ec3bb22e62"
+  },
+  "generation": {
+    "stream": false,
+    "max_tokens": 65536,
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 20,
+    "min_p": 0.0,
+    "enable_thinking": false,
+    "reasoning_policy": "No hidden reasoning is requested; visible completions and complete Aider chat histories are preserved.",
+    "model_settings_sha256": "37719904fc1e048c4950f30e46bac0d7277493c1bdcc04f07b6234ad8b81ed5c",
+    "model_metadata_sha256": "e5f861d689a7d11e439fa69537ff88d8e764e6d486a22b0a3070a1a63cad5df8"
+  },
+  "prompt_gate": {
+    "representative_tasks": ["beer-song", "poker", "tree-building"],
+    "rendered_manifest_sha256": "df5faa5a0f17a3bc8917d5759db8fd7d9f34ad08ace4b841123f55698c2bf134",
+    "prompt_adapter_source_sha256": "607d70b2699d876d346be1eb4afabf941d91ee6e6e524717f61b94c5815cf3cd",
+    "diff_summary": "Each diff adds only Aider's standard supplied-file constraints, whole-file listing contract, and English-response instruction to the canonical task text."
+  },
+  "smoke_gate": {
+    "source_run": "/srv/ssd/intel/llm/bench-results/ornith15-35b-a3b-r0b0t-aider-smoke32-20260824",
+    "protocol_lock_sha256": "defe1f24b3923510de94bd39b7f973916534a0da69b5f2c5bd15afb74aedf1c0",
+    "audit_sha256": "5ae8c01a8212b02c0a3cdf8caa8437279b3aff818f341a674d86d6ada6960197",
+    "log_sha256": "baea259d0ce7e8b1070183b57ee9aa1b2e5929f2b2cbf71530f98054d17caa53",
+    "status": "valid-complete",
+    "tasks": 32,
+    "parsed_results": 32,
+    "nonempty_chat_histories": 32,
+    "nonempty_completion_evidence": 32,
+    "client_or_api_errors": 0,
+    "context_exhaustions": 0,
+    "error_outputs": 2,
+    "malformed_responses": 2,
+    "pass_at_1": 0,
+    "pass_by_2": 4,
+    "max_chat_history_8192_confirmed": true,
+    "peak_running_requests": 12,
+    "peak_vram_mib": 31282
+  },
+  "scoring_and_boundary_policy": {
+    "pass_at_1": "Preserve and score the original first Aider attempt without replacement.",
+    "second_attempt": "Report Aider's canonical second-attempt cumulative pass rate separately.",
+    "retry_policy": "No retries beyond Aider's two canonical attempts.",
+    "context_policy": "A request reaching the locked context or output boundary remains a scored non-termination/failure with its original trace.",
+    "integrity_policy": "Do not publish a valid score unless 225 result records, model identity, non-empty chat/completion evidence, metadata recognition, and transport integrity pass audit."
+  },
+  "approval": {
+    "user_message": "if dunamis is free, continue the benchmark",
+    "condition_verified": "No unrelated benchmark or competing compute job; only the intended r0b0t SGLang server and lightweight desktop processes were present."
+  },
+  "sources": [
+    "https://huggingface.co/r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16/tree/dcbc0a25d5b3ce634c2f5d988a81ba598ca7adcc",
+    "https://github.com/Aider-AI/aider/tree/5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "https://github.com/Aider-AI/polyglot-benchmark/tree/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f"
+  ]
+}
