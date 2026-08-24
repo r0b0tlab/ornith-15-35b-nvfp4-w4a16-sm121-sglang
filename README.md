@@ -1,4 +1,4 @@
-# Ornith-1.5-35B-A3B NVFP4-W4A16 (SGLang, DGX Spark GB10/SM121)
+# Ornith-1.5-35B-A3B NVFP4-W4A16 (SGLang, SM12X)
 
 NVFP4 **W4A16 weight-only** quantization of
 [`ornith-ai/Ornith-1.5-35B-A3B`](https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B)
@@ -7,23 +7,63 @@ NVIDIA Model Optimizer (dev `913f5e224`) using the official `w4_nvfp4`
 recipe preset, with the bundled MTP head kept in BF16 and served via SGLang
 EAGLE/nextn speculative decoding.
 
-This repo contains the **reproduction package**: the ready-to-run container,
-the 200-question evaluation harness with the exact question set, scoring
-code, raw eval rows from all four runs, checkpoint audit tooling, and the
-quantization recipes.
+This repo is the **reproduction package**: click-run serve for SM12X
+(SM 12.0 + SM 12.1), the SM12X-LLM-BENCH claim-row evidence, the older
+200-question harness, checkpoint audit tooling, and the quantization recipes.
 
 - Checkpoint: [huggingface.co/r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16](https://huggingface.co/r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16)
-- Container: `ghcr.io/r0b0tlab/ornith-15-35b-nvfp4-w4a16-sm121-sglang:latest`
-- Hardware validated: NVIDIA DGX Spark (GB10, SM 12.1, 121 GB unified memory), aarch64
+- Containers: `ghcr.io/r0b0tlab/ornith-15-35b-nvfp4-w4a16-sm121-sglang:latest` (GB10/SM121) and `:rtx5090` (x86 SM120)
+- Claim-row bench: [SM12X-SOCOM/SM12X-LLM-BENCH](https://github.com/SM12X-SOCOM/SM12X-LLM-BENCH) `full` · native thinking on
 
 Independent community quantization by r0b0tlab. Not affiliated with or
 endorsed by Ornith AI or NVIDIA.
+
+### Hardware
+
+| Part | CC | Memory | Compose / profile | Default ctx | Status |
+|---|---|---|---|---:|---|
+| DGX Spark / GB10 | SM 12.1 | 121 GB unified | `docker-compose.yml` | **262144** | **validated** (claim row) |
+| RTX PRO 6000 | SM 12.0 | ~96 GB | `docker-compose.rtx-pro-6000.yml` | 131072 | sized, not physically signed off |
+| GeForce RTX 5090 / 50-class | SM 12.0 | 32 GB | `docker-compose.rtx5090.yml` | 32768 | sized, not physically signed off |
+
+`./scripts/click-run.sh` picks the row from `nvidia-smi` compute capability + memory.
+
+---
+
+## Click-run
+
+```bash
+git clone https://github.com/r0b0tlab/ornith-15-35b-nvfp4-w4a16-sm121-sglang.git
+cd ornith-15-35b-nvfp4-w4a16-sm121-sglang
+chmod +x scripts/click-run.sh scripts/bench-sm12x.sh
+./scripts/click-run.sh
+# waits for /health, then:
+./scripts/bench-sm12x.sh    # SM12X-LLM-BENCH full, native think-on
+```
+
+Override detection with `./scripts/click-run.sh --profile spark|pro6000|rtx5090`.
+Override context with `CONTEXT_LENGTH=32768 ./scripts/click-run.sh`.
+
+Smoke (native thinking — do **not** force think-off for a quality claim):
+
+```bash
+curl http://127.0.0.1:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "Ornith-1.5-35B-A3B",
+    "messages": [{"role": "user", "content": "What is 19*23? Answer with just the number."}],
+    "temperature": 0, "max_tokens": 256
+  }'
+```
+
+If you omit `MODEL_PATH` / a local `models/` tree, the entrypoint pulls
+`r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16` from Hugging Face at boot.
 
 ---
 
 ## Results
 
-### 200-question suite (greedy, thinking disabled, fixed scorer)
+### 200-question suite (historical, greedy, thinking disabled)
 
 | Family | n | BF16 baseline | This model (base AR) | This model + MTP |
 |---|---|---|---|---|
@@ -77,13 +117,11 @@ Max-context NIAH (r0b0bench lane, 25/50/90% of 262,144):
 | 130,944 | PASS | — |
 | 235,699 | **FAIL** (degenerate "!" output, deterministic) | **PASS** (needle retrieved) |
 
-**MTP at ≥90% depth is a confirmed limitation**: with EAGLE K=1 active,
-the drafter's position path degrades at ~235K tokens and the verify loop
-accepts a garbage "!" stream (accept rate 1.00 in the log — the draft's
-garbage is accepted); removing the speculative algorithm passes the same
-depth. Root cause is the draft position handling at extreme depth in this
-SGLang build, not the checkpoint. For 90%+ context workloads, serve base-AR
-(no `--speculative-algorithm`).
+**MTP at ~235k constructor tokens is a confirmed r0b0bench-lane limitation**
+(degenerate `"!"` stream). The SM12X claim-row NIAH (below) passed 5/5 with
+MTP on; its 90% cell was **137k actual prompt tokens**, not 235k. Do not
+treat those as the same depth. For workloads that really sit at ≥230k with
+MTP, serve base-AR (`MTP=0`).
 
 Canary lane (r0b0bench protocol): all cases pass with the fixed JSON probe
 question and `--tool-call-parser qwen3_coder`; the `structured` case shows
@@ -155,32 +193,18 @@ IFEval here is a lightweight constraint checker, not the official scorer.
 
 ---
 
-## Quick start (container)
+## Manual compose (if you skip click-run)
 
 Requirements: NVIDIA GPU with Blackwell-class FP4 support, Docker with
 nvidia-container-toolkit, ~25 GB disk for the checkpoint.
 
 ```bash
-# 1) Get the checkpoint (either from HF, or use your own local copy)
 hf download r0b0tlab/Ornith-1.5-35B-A3B-NVFP4-W4A16 \
   --local-dir ./models/ornith-15-35b-a3b-nvfp4-w4a16-B
-
-# 2) Launch
-docker compose up -d
-
-# 3) Wait for health (first boot ~4-5 min: load 152 s + CUDA-graph capture)
+docker compose up -d          # Spark/GB10 claim defaults (262144)
+# or: docker compose -f docker-compose.rtx5090.yml up -d
+# or: docker compose -f docker-compose.rtx-pro-6000.yml up -d
 curl http://127.0.0.1:8000/health
-
-# 4) Smoke test
-curl http://127.0.0.1:8000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "Ornith-1.5-35B-A3B",
-    "messages": [{"role": "user", "content": "What is 19*23? Answer with just the number."}],
-    "temperature": 0, "max_tokens": 32,
-    "chat_template_kwargs": {"enable_thinking": false}
-  }'
-# → "437"
 ```
 
 Without compose:
@@ -221,11 +245,11 @@ Differences vs the GB10 profile ([`serve-profiles/rtx5090/serve.sh`](serve-profi
 
 | Knob | GB10 (121 GB unified) | RTX 5090 (32 GB) | Why |
 |---|---|---|---|
-| `--mem-fraction-static` | 0.80 | **0.92** | dedicated 32 GB part; OS doesn't share VRAM |
-| `--max-running-requests` | default (48/105) | **4** | mamba state cache is the binding constraint at 32 GB |
-| `--max-mamba-cache-size` | default (528) | **24** | ~1.4 GB state cache → 4 × 32K contexts fit |
-| context / KV | 32768 × 105 reqs | 32768 × 4 reqs | ~2.5 GB FP8 KV at this occupancy |
-| MTP (EAGLE K=1) | on | on; `MTP=0` env to disable | draft costs ~3.6 GB; disabling reclaims it for KV |
+| `--mem-fraction-static` | **0.75** | **0.92** | Spark claim serve; 32 GB discrete packs tighter |
+| `--max-running-requests` | default | **4** | mamba state cache binds 32 GB |
+| `--max-mamba-cache-size` | default | **24** | ~1.4 GB state → 4 × 32K contexts |
+| context / KV | **262144** | 32768 × 4 reqs | Spark claim NIAH; 5090 stays 32k |
+| MTP (EAGLE K=1) | on | on; `MTP=0` to disable | draft ~3.6 GB |
 
 Memory budget ≈ 21.1 GB weights + 3.6 GB draft + 1.1 GB graphs + 1.4 GB
 mamba + 2.5 GB KV ≈ 29.7 GB. First boot on a cold cache JIT-compiles the
@@ -273,10 +297,15 @@ Thinking-off protocol: `chat_template_kwargs: {"enable_thinking": false}`.
 
 ### Reproduce the evaluation
 
+**Claim row** is SM12X-LLM-BENCH `full` with thinking on — `./scripts/bench-sm12x.sh`.
+
+The 200-question harness below is the **historical think-off subset** (n=80/40/20).
+It is not the native-quality claim.
+
 ```bash
 cd eval
 python run_quality_set.py --base-url http://127.0.0.1:8000 --run-id my-post
-python rescore.py my-post          # fixed-scorer summary
+python rescore.py my-post
 ```
 
 BF16-baseline and quantized rows from our runs are in `eval/data/` —
@@ -346,26 +375,20 @@ It scored GSM8K 70.00% vs this recipe's 76.25% and decoded at 38.6 tok/s vs
 
 ```
 ├── README.md
-├── docker-compose.yml            # GB10/SM121 one-command launch
-├── docker-compose.rtx5090.yml    # RTX 5090 (SM 12.0, 32 GB) launch
-├── container/                    # GB10 Dockerfile + serve.sh + build script
-│   └── Dockerfile.rtx5090        # x86 CI-built image (same pinned stack)
+├── scripts/click-run.sh              # detect SM120/121, pull ckpt, compose up
+├── scripts/bench-sm12x.sh            # SM12X-LLM-BENCH full, native think-on
+├── docker-compose.yml                # GB10/SM121 claim defaults (262144)
+├── docker-compose.rtx5090.yml        # RTX 50 / SM120 32 GB
+├── docker-compose.rtx-pro-6000.yml   # RTX PRO 6000 / SM120 ~96 GB
+├── container/                        # GB10 Dockerfile + serve.sh
+│   └── Dockerfile.rtx5090            # x86 SM120 image
 ├── serve-profiles/
-│   └── rtx5090/serve.sh          # tuned launcher for a single 32 GB card
-├── eval/
-│   ├── run_quality_set.py        # run the 200-question suite (resumable)
-│   ├── rescore.py                # fixed-scorer summaries from raw rows
-│   ├── answer_extract.py         # GSM8K answer extraction (the fixed scorer)
-│   └── data/                     # quality-200.jsonl + raw rows for 4 runs
+│   ├── rtx5090/serve.sh
+│   └── rtx-pro-6000/serve.sh
+├── eval/                             # historical 200-q think-off harness
+├── results/sm12x-full-thinkon-20260824/   # claim-row evidence
 ├── quantization/
-│   ├── w4a16-nvfp4-std.yaml      # the shipped recipe (candidate B)
-│   ├── w4a16-expert-4o6.yaml     # experts-only 4/6 alternative (candidate A)
-│   ├── quant-cand-custom.py      # CPU-first quantize driver
-│   └── reattach-mtp.py           # BF16 MTP re-attachment
 └── audits/
-    ├── audit_checkpoint.py       # scale pairing / MTP hashes / key closure
-    ├── cosine_probe.py           # NVFP4 dequant cosine vs BF16 source
-    └── results/                  # audit JSON outputs
 ```
 
 ## Credits and attribution
@@ -381,7 +404,8 @@ It scored GSM8K 70.00% vs this recipe's 76.25% and decoded at 38.6 tok/s vs
   `0.5.6.post3.dev9218+g5a7b26c63`, with [FlashInfer](https://github.com/flashinfer-ai/flashinfer)
   0.6.17 CUTLASS FP4 GEMMs and Marlin W4A16 MoE kernels; hosted on
   [PyTorch](https://pytorch.org) 2.13.0+cu130.
-- **Infrastructure:** NVIDIA DGX Spark (GB10 / SM 12.1).
+- **Infrastructure:** NVIDIA DGX Spark (GB10 / SM 12.1) validated;
+  SM 12.0 (RTX 50 / PRO 6000) profiles are sized from that ledger.
 
 ## License
 

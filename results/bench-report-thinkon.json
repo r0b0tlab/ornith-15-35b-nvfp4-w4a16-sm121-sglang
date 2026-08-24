@@ -19,7 +19,7 @@
       "n": 5
     },
     "artifacts": {
-      "canary.json": "/home/r0b0tdgx/ornith15-35b/bench-20260821T203003Z/canary/canary.json"
+      "canary.json": "/data/ornith/bench-20260821T203003Z/canary/canary.json"
     },
     "infra_errors": 0,
     "imported": false,
@@ -125,7 +125,7 @@
       "total_failed": 0
     },
     "artifacts": {
-      "summary.json": "/home/r0b0tdgx/ornith15-35b/bench-20260821T203003Z/concurrency/summary.json"
+      "summary.json": "/data/ornith/bench-20260821T203003Z/concurrency/summary.json"
     },
     "infra_errors": 0,
     "imported": false,
@@ -153,7 +153,7 @@
       "template_source": "transformers_chat_template (render_failed=Client error '404 Not Found' for url 'http://127.0.0.1:8000/v1/chat/completions/render'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)",
       "tokenizer": {
         "backend": "tokenizers",
-        "path": "/home/r0b0tdgx/models/ornith-15-35b-a3b-bf16/tokenizer.json"
+        "path": "/data/models/ornith-15-35b-a3b-bf16/tokenizer.json"
       },
       "depth_policy": "frac_of_max_context",
       "note": "Depths are always 25/50/90% of (max_model_len - generation_reserve). This is the standard max-context capacity package; physical KV shortfall surfaces as infra ERROR.",
@@ -230,7 +230,7 @@
       ]
     },
     "artifacts": {
-      "niah.json": "/home/r0b0tdgx/ornith15-35b/bench-20260821T203003Z/niah/niah.json"
+      "niah.json": "/data/ornith/bench-20260821T203003Z/niah/niah.json"
     },
     "infra_errors": 0,
     "imported": false,

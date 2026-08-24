@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""NVFP4 dequant cosine probe — Ornith W4A16 A/B vs BF16 source (node3).
+"""NVFP4 dequant cosine probe — Ornith W4A16 A/B vs BF16 source.
 
 Handles the actual export layout:
   <mod>.weight          uint8 [out, in/2]   (packed along last dim, transposed HF)

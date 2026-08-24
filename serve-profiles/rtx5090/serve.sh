@@ -30,6 +30,8 @@ MTP_ARGS=(
   --speculative-num-draft-tokens 2
 )
 if [ "${MTP:-1}" = "0" ]; then MTP_ARGS=(); fi
+METRICS_ARGS=()
+if [ "${ENABLE_METRICS:-1}" != "0" ]; then METRICS_ARGS=(--enable-metrics); fi
 
 exec python -m sglang.launch_server \
   --model-path "$MODEL_PATH" \
@@ -44,5 +46,6 @@ exec python -m sglang.launch_server \
   --max-running-requests "$MAX_RUNNING_REQUESTS" \
   --max-mamba-cache-size "$MAX_MAMBA_CACHE_SIZE" \
   "${MTP_ARGS[@]}" \
+  "${METRICS_ARGS[@]}" \
   --host 0.0.0.0 --port "$PORT" \
   ${EXTRA_ARGS:-}

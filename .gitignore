@@ -1,2 +1,6 @@
 __pycache__/
 *.pyc
+models/
+out/
+.deps/
+context/

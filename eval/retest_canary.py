@@ -11,7 +11,7 @@ from r0b0bench.lanes.canary import run_canary
 
 BASE = os.environ.get("BENCH_BASE_URL", "http://127.0.0.1:8000/v1")
 MODEL = os.environ.get("BENCH_MODEL", "Ornith-1.5-35B-A3B")
-OUT = Path(os.environ.get("BENCH_OUT", "/home/r0b0tdgx/ornith15-35b/canary-retest"))
+OUT = Path(os.environ.get("BENCH_OUT", str(Path.cwd() / "out" / "canary-retest")))
 OUT.mkdir(parents=True, exist_ok=True)
 
 profile = load_profile("core-subset")

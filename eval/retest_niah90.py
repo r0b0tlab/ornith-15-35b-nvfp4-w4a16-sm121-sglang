@@ -14,8 +14,8 @@ from r0b0bench.lanes.niah import run_niah
 
 BASE = os.environ.get("BENCH_BASE_URL", "http://127.0.0.1:8000/v1")
 MODEL = os.environ.get("BENCH_MODEL", "Ornith-1.5-35B-A3B")
-TOKENIZER = os.environ.get("BENCH_TOKENIZER", "/home/r0b0tdgx/models/ornith-15-35b-a3b-bf16")
-OUT = Path(os.environ.get("BENCH_OUT", "/home/r0b0tdgx/ornith15-35b/niah-retest"))
+TOKENIZER = os.environ.get("BENCH_TOKENIZER", "")
+OUT = Path(os.environ.get("BENCH_OUT", str(Path.cwd() / "out" / "niah-retest")))
 OUT.mkdir(parents=True, exist_ok=True)
 
 profile = load_profile("core-subset")

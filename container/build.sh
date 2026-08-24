@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Materialize the build context on node3 and build + push the image.
-# Run on node3: bash build.sh
+# Materialize the GB10 image build context (pinned venv + JIT caches) and push.
+# Run on the aarch64 GB10 builder that holds the validated venv/caches:
+#   bash build.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 

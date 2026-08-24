@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 0.3 checkpoint audit for Ornith W4A16 candidates A and B (node3, GPU ok).
+"""Phase 0.3 checkpoint audit for Ornith W4A16 candidates A and B.
 
 1. Scale-companion audit: every quantized weight tensor has scale companions;
    scales finite and non-zero.

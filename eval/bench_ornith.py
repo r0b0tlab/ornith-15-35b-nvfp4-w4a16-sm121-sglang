@@ -22,8 +22,8 @@ from r0b0bench.lanes.niah import run_niah
 
 BASE = os.environ.get("BENCH_BASE_URL", "http://127.0.0.1:8000")
 MODEL = os.environ.get("BENCH_MODEL", "Ornith-1.5-35B-A3B")
-TOKENIZER = os.environ.get("BENCH_TOKENIZER", "/home/r0b0tdgx/models/ornith-15-35b-a3b-bf16")
-OUT = os.environ.get("BENCH_OUT", f"/home/r0b0tdgx/ornith15-35b/bench-{time.strftime('%Y%m%dT%H%M%SZ')}")
+TOKENIZER = os.environ.get("BENCH_TOKENIZER", "")
+OUT = os.environ.get("BENCH_OUT", str(Path.cwd() / "out" / f"bench-{time.strftime('%Y%m%dT%H%M%SZ')}"))
 
 OUTDIR = Path(OUT)
 OUTDIR.mkdir(parents=True, exist_ok=True)
