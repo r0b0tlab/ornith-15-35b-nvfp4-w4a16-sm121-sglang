@@ -1,0 +1,14 @@
+9b1a3a9339c6a8dfa742a486d775af4dbfa4349c9d942ba261cba84309d409f4  ./full-artifacts.tar.gz
+976995250c6ab88a31a730dd1a69eae74a3e378540f8f940529d3523f6145538  ./logs/final-audit.log
+a14a29fcafa9ff0dc10cdf4ea326fb94317f09d0be3b1a9ddf279cc3bb329b11  ./logs/full.log
+50f76f12d9e90e1f5208cfc9330e4ed7f581f5669dcb796bc7991d852ff62530  ./logs/full-stats.log
+e12ea618be4869bb010b94c91a65d9f44870dba15adb7f07fe398e3982c2b42f  ./logs/model-name.txt
+976995250c6ab88a31a730dd1a69eae74a3e378540f8f940529d3523f6145538  ./protocol/final-audit.json
+e5f861d689a7d11e439fa69537ff88d8e764e6d486a22b0a3070a1a63cad5df8  ./protocol/model-metadata.json
+37719904fc1e048c4950f30e46bac0d7277493c1bdcc04f07b6234ad8b81ed5c  ./protocol/model-settings.yml
+b5a1b9f17ce0e983117dc288c30232dc239d11234268ca83497cb04da6ce4035  ./protocol/protocol.lock.json
+9089942adaa7ee73da7db5deea2ab2e806f78604e6763080d4a2bd81a37a1b4b  ./README.md
+523802282f6492dca3ee64ed71f789407b1c8d9acda874d2500c58ec3bb22e62  ./scripts/audit-full.py
+899cf48c3d99f149376862a69867850a85d8e98e4dafb7cfa8cc6f900f0ba85b  ./scripts/run-full.sh
+928fb1f7a9abab541146bb12813c572f145eb379b300d49434e312993efa6277  ./telemetry/full-gpu.csv
+49bd5af3e3a35319ea20e9c2b88bfcd789b6124573df197e13c91b7004df9acd  ./telemetry/live-metrics-status.tsv

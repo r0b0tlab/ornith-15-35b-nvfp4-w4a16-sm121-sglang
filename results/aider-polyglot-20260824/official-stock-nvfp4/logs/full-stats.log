@@ -1,0 +1,31 @@
+─────────────────────────────── /benchmarks/full ───────────────────────────────
+- dirname: full
+  test_cases: 225
+  model: openai/main
+  edit_format: whole
+  commit_hash: 5dc9490-dirty
+  pass_rate_1: 15.1
+  pass_rate_2: 35.6
+  pass_num_1: 34
+  pass_num_2: 80
+  percent_cases_well_formed: 99.6
+  error_outputs: 1
+  num_malformed_responses: 1
+  num_with_malformed_responses: 1
+  user_asks: 148
+  lazy_comments: 0
+  syntax_errors: 0
+  indentation_errors: 0
+  exhausted_context_windows: 0
+  prompt_tokens: 3152569
+  completion_tokens: 600623
+  test_timeouts: 2
+  total_tests: 225
+  command: aider --model openai/main
+  date: full
+  versions: 0.86.3.dev
+  seconds_per_case: 45.5
+  total_cost: 0.0000
+
+costs: $0.0000/test-case, $0.00 total, $0.00 projected
+────────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,96 @@
+{
+  "created_utc": "2026-08-24T09:15:00Z",
+  "protocol_classification": "local-custom",
+  "intent": "Matched full 225-task Aider Polyglot run for official Ornith 1.5 35B-A3B stock NVFP4 on Dunamis.",
+  "model": {
+    "display_name": "Ornith 1.5 35B-A3B stock NVFP4",
+    "repository": "ornith-ai/Ornith-1.5-35B-A3B-NVFP4",
+    "revision": "0f0b1b59b879ccde1353e6ebd0fb10c204d4c544",
+    "profile_name": "ornith15-35b-a3b-stock-nvfp4-aider",
+    "profile_sha256": "680dcc186fdc361806f57e811e340517ed1013dd3dd3a08b88ee1ef1f16ce8ce",
+    "config_sha256": "4b12527ba7cc6d64ce5fd8a2569c77ea2713efca2b5ffc42b4402048ee857c4b",
+    "model_index_sha256": "c9bfd574cc1deffe09d8fbc5a7d8c2e105cfdb7764b1ee7b16ca52072e7366f7",
+    "tokenizer_config_sha256": "5186f0defcd7f232382c7f0aebcd2252d073bb921ab240e407b7ae8745d2b29b",
+    "chat_template_sha256": "182e77dd83bd8e9ca818b240b82e28f243762cd5dda32e6eef327df7b1cd107e",
+    "weight_shards": [
+      {"file": "model-00001-of-00003.safetensors", "sha256": "3fd2238ccda4af53b44d0c8f1017bccabfa91084ef3bf4fea415a5d14d734bd2"},
+      {"file": "model-00002-of-00003.safetensors", "sha256": "e66cc8cc37c472e2d23c8c5f45b563e997a6e33117317a420c6f5da14eb7b756"},
+      {"file": "model-00003-of-00003.safetensors", "sha256": "5724de7de4b8c44f68639b57f404e6c662c8ef22a3be3935a2fabf92b2af2c51"}
+    ]
+  },
+  "runtime": {
+    "name": "SGLang",
+    "image_digest": "sha256:febfb971c7352570fc445c466ebd6ffc9d896024958e544a60f2137fd85856b1",
+    "context_tokens": 262144,
+    "kv_cache": "fp8_e4m3",
+    "max_running_requests": 12,
+    "max_mamba_cache_slots": 60,
+    "decode_cuda_graph_batches": [1, 2, 4, 8, 12],
+    "prefill_cuda_graphs": false,
+    "radix_cache": false,
+    "flashinfer_autotune": false,
+    "metrics_enabled": true
+  },
+  "benchmark": {
+    "family": "aider-polyglot",
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "polyglot_revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "container_digest": "sha256:9ddd45d4dd6c1547eb1e2d379f9b0fcec1dc4c2e65e1e82016f2f4754f231392",
+    "task_count": 225,
+    "edit_format": "whole",
+    "tries": 2,
+    "client_workers": 12,
+    "run_script_sha256": "47b9f2e32302e7b4ea85f37dcc2eb17e4fab0cbc49a0b9954123f5856bebe93c",
+    "audit_script_sha256": "6732f888967473dab1fff3ce647bd5bb69bfc2b64a68d8a3429b062f43beecf3"
+  },
+  "generation": {
+    "max_tokens": 65536,
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 20,
+    "min_p": 0.0,
+    "enable_thinking": false,
+    "model_settings_sha256": "37719904fc1e048c4950f30e46bac0d7277493c1bdcc04f07b6234ad8b81ed5c",
+    "model_metadata_sha256": "e5f861d689a7d11e439fa69537ff88d8e764e6d486a22b0a3070a1a63cad5df8"
+  },
+  "prompt_gate": {
+    "representative_tasks": ["beer-song", "poker", "tree-building"],
+    "rendered_manifest_sha256": "df5faa5a0f17a3bc8917d5759db8fd7d9f34ad08ace4b841123f55698c2bf134",
+    "diff_summary": "Identical Aider whole-edit prompt adapter and representative rendered prompts used for the valid r0b0t baseline."
+  },
+  "context_gate": {
+    "prompt_tokens": 260000,
+    "needle": "OPAL-7319",
+    "needle_ok": true,
+    "elapsed_s": 64.70789440500084
+  },
+  "smoke_gate": {
+    "source_run": "/srv/ssd/intel/llm/bench-results/ornith15-35b-a3b-stock-aider-smoke32-20260824",
+    "protocol_lock_sha256": "ca2f0a0507d398311a7e2d0612d6f8134dd25719326a11af80825e7085687001",
+    "audit_sha256": "c81fe054537adeedca1134e4e954cea1b13a081307fed39a108468f4e568ff7d",
+    "log_sha256": "38e9d9d8c64ca394b27b9e14625aff48fbd36ce0d29f5e21e6a20591600fd235",
+    "status": "valid-complete",
+    "tasks": 32,
+    "nonempty_completions": 32,
+    "client_or_api_errors": 0,
+    "context_exhaustions": 0,
+    "pass_at_1": 1,
+    "pass_by_2": 9,
+    "peak_running_requests": 12,
+    "peak_vram_mib": 31198
+  },
+  "scoring_policy": {
+    "pass_at_1": "Preserve original first attempt.",
+    "second_attempt": "Report canonical cumulative pass by two.",
+    "retry_policy": "No retries beyond Aider's two attempts.",
+    "integrity_policy": "Require all result records, model identity, nonempty completion evidence, zero context exhaustion, and no client/API exceptions."
+  },
+  "approval": {
+    "user_message": "download this one and make it ready also, and fix privative's, and then run it and the stock one so we get a 3 way equivalent"
+  },
+  "sources": [
+    "https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B-NVFP4/tree/0f0b1b59b879ccde1353e6ebd0fb10c204d4c544",
+    "https://github.com/Aider-AI/aider/tree/5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "https://github.com/Aider-AI/polyglot-benchmark/tree/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f"
+  ]
+}
